@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid"> <!-- Use 'container-fluid' for a wider container -->
+<div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header bg-info text-white">
                     <h2 class="mb-0">User List
-                    @role('Admin') <a href="{{ route('create') }}" class="btn btn-success" style="margin-left: 1020px">Create New</a></h2> @endrole
-                    @role('Doctor') <a href="#" class="btn btn-success disabled" style="margin-left: 1020px">Create New</a></h2> @endrole
+                    @role('Admin') <a href="{{ route('create') }}" class="btn btn-warning" style="margin-left:960px">Create New</a></h2> @endrole
+                    {{-- @role('Doctor') <a href="#" class="btn btn-warning " style="margin-left:960px">Create New</a></h2> @endrole --}}
 
                 </div>
                 <div class="card-body">
@@ -20,7 +20,6 @@
                                     <th>Email</th>
                                     <th>Mobile</th>
                                     <th>Gender</th>
-                                    {{-- <th>Role</th> --}}
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -47,8 +46,6 @@
                 { data: 'email', name: 'email' },
                 { data: 'mobile_number', name: 'mobile_number' },
                 { data: 'gender', name: 'gender' },
-                // { data: 'role', name: 'role' },
-                // { data: 'actions', name: 'actions', orderable: false, searchable: false },
                 { 
                     data: 'actions', 
                     name: 'actions', 

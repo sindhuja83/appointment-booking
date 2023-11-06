@@ -69,26 +69,27 @@ $current_route = request()->route()->getName();
     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
     @role('Admin')
-    <li class="nav-item">
-    <a href="{{route('dashboard')}}" class="nav-link">
-    <i class="nav-icon fas fa-tachometer-alt"></i>
-    <p>
-      Dashboard
-    </p>
+    <li class="nav-item {{ $current_route == 'dashboard' ? 'menu-open' : '' }}">
+      <a href="{{ route('dashboard') }}" class="nav-link {{ $current_route == 'dashboard' ? 'active' : '' }}">
+          <i class="nav-icon fas fa-tachometer-alt"></i>
+          <p>
+              Dashboard
+          </p>
+      </a>
+      </li>
+    @endrole
+
+    @role('Doctor')
+    <li class="nav-item {{ $current_route == 'dashboard' ? 'menu-open' : '' }}">
+    <a href="{{ route('dashboard') }}" class="nav-link {{ $current_route == 'dashboard' ? 'active' : '' }}">
+        <i class="nav-icon fas fa-tachometer-alt"></i>
+        <p>
+            Dashboard
+        </p>
     </a>
     </li>
     @endrole
 
-    @role('Doctor')
-    <li class="nav-item">
-    <a href="{{route('getEvents')}}" class="nav-link">
-    <i class="nav-icon fas fa-tachometer-alt"></i>
-    <p>
-      Dashboard
-    </p>
-    </a>
-    </li>
-    @endrole
 
     @hasanyrole('Admin|Doctor')
     <li class="nav-item {{$current_route=='userlist'?'menu-open':''}}">
@@ -107,8 +108,33 @@ $current_route = request()->route()->getName();
     </a>
     </li>
     </ul>
+
+    <li class="nav-item {{ in_array($current_route, ['slotlist', 'appointment.listing']) ? 'menu-open active' : '' }}">
+      <a href="#" class="nav-link {{ in_array($current_route, ['slotlist', 'appointment.listing']) ? 'active' : '' }}">
+        <i class="fa fa-address-book" aria-hidden="true"></i>
+        <p>
+          Availability Management
+          <i class="right fas fa-angle-left"></i>
+        </p>
+      </a>
+      <ul class="nav nav-treeview">
+        <li class="nav-item">
+          <a href="{{ route('slotlist') }}" class="nav-link {{ $current_route == 'slotlist' ? 'active' : '' }}">
+            <i class="fa fa-list" aria-hidden="true"></i>
+            <p>Doctor's Available Slot</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ route('appointment.listing') }}" class="nav-link {{ $current_route == 'appointment.listing' ? 'active' : '' }}">
+            <i class="fa fa-list" aria-hidden="true"></i>
+            <p>Appointment Details List</p>
+          </a>
+        </li>
+      </ul>
+    </li>
+    
    
-    <li class="nav-item {{$current_route=='slotlist'?'menu-open':''}}">
+    {{-- <li class="nav-item {{$current_route=='slotlist'?'menu-open':''}}">
       <a href="#" class="nav-link {{$current_route=='slotlist'?'active':''}}">
         <i class="fa fa-address-book" aria-hidden="true"></i>
       <p>
@@ -132,7 +158,7 @@ $current_route = request()->route()->getName();
         <p> Appointment Details List</p>
         </a>
         </li>
-        </ul>
+        </ul> --}}
         @endhasanyrole 
     </ul>
     </nav>
