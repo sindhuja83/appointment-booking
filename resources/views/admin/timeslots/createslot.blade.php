@@ -4,39 +4,41 @@
 <div class="container">
     <div class="card">
         <div class="card-header">
-           <h3> Doctor's Availability Time Slot</h3>
+           <h3>Doctor's Availability Time Slot</h3>
         </div>
         <div class="card-body">
-            <form id="appointmentForm" method="POST" action="{{ route('storeTimeSlot') }}"> 
+            <form id="appointmentForm" method="POST" action="{{ route('storeTimeSlot') }}">
                 @csrf
                 <div class="form-group">
                     <label for="doctorName">Doctor's Name:</label>
-                    <input type="text" class="form-control" id="doctorName" name="doctorName" value="{{Auth::user()->user_name}}" disabled>
+                    <input type="text" class="form-control" id="doctorName" name="doctorName" value="{{ Auth::user()->user_name }}" disabled>
                 </div>
 
                 <div class="form-group">
                     <label for="date">Date:</label>
-                    <input type="date" class="form-control" id="date" name="date" >
+                    <input type="date" class="form-control" id="date" name="date" value="{{ old('date') }}">
                 </div>
 
                 <div class="form-group">
                     <label for="startTime">Start Time:</label>
-                    <input type="time" class="form-control" id="startTime" name="startTime">
+                    <input type="time" class="form-control" id="startTime" name="startTime" value="{{ old('startTime') }}">
                 </div>
 
                 <div class="form-group">
                     <label for="endTime">End Time:</label>
-                    <input type="time" class="form-control" id="endTime" name="endTime">
+                    <input type="time" class="form-control" id="endTime" name="endTime" value="{{ old('endTime') }}">
                 </div>
 
                 <button type="submit" class="btn btn-primary">Submit</button>
-                <a href="{{ route('slotlist') }}" class="btn btn-warning" style="margin-left:900px">Back</a>
-            </div>
+                <a href="{{ route('slotlist') }}" class="btn btn-warning" style="margin-left: 900px">Back</a>
             </form>
         </div>
     </div>
 </div>
 
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/additional-methods.min.js"></script>
  <script>
     $(document).ready(function () {
         $('#appointmentForm').validate({
@@ -79,3 +81,4 @@
     });
  </script>
 @endsection
+

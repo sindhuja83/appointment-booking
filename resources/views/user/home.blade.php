@@ -504,7 +504,7 @@
 
 
 <!--  APPOINTMENT BOOKING FORM -->
-<section id="appointment" data-stellar-background-ratio="3">
+<section id="appointment-form" data-stellar-background-ratio="3">
     <div class="container">
         <div class="row">
             <div class="col-md-6 col-sm-6">
@@ -549,7 +549,7 @@
                             <div class="form-group col-md-6">
                                 <label for="patientName">Patient Name</label>
                                 @if (Auth::check())
-                                <input type="text" class="form-control" id="patientName" name="patientName" placeholder="Patient Name" value="{{ Auth::user()->user_name }}" readonly>
+                                <input type="text" class="form-control" id="patientName" name="patientName" placeholder="Patient Name" value="{{ Auth::user()->user_name }}" disabled>
                             @else
                                 <input type="text" class="form-control" id="patientName" name="patientName" placeholder="Patient Name" readonly>
                                 <div class="alert alert-danger">
@@ -592,60 +592,71 @@
             </div>
         </div>
     </div>
-</section>
+</section> 
 
 <script>
-     $(document).ready(function() {
-         $('.book-appointment').on('click', function(event) {
-             event.preventDefault();
- 
-             var doctorName = $(this).data('doctor-name');
-             var doctorId = $(this).data('doctor-id');
- 
-             $('#doctorName').val(doctorName);
-             $('#doctorId').val(doctorId);
- 
-             fetchDoctorTimeSlots(doctorId);
- 
-             $('html, body').animate({
-                 scrollTop: $('#appointment').offset().top
-             }, 1000);
-         });
- 
-         $('#timeSlot').on('change', function() {
-             var selectedTimeSlot = $(this).val();
-             var timeSlotId = $(this).find('option:selected').data('time-slot-id');
- 
-             $('#timeSlotId').val(timeSlotId);
-         });
+$(document).ready(function () {
+    $('.book-appointment').on('click', function (event) {
+        event.preventDefault();
+
+        var doctorName = $(this).data('doctor-name');
+        var doctorId = $(this).data('doctor-id');
+
+        $('#doctorName').val(doctorName);
+        $('#doctorId').val(doctorId);
+
+        fetchDoctorTimeSlots(doctorId);
+    });
+
+    $('#date').on('change', function () {
+        var selectedDate = $(this).val();
+
+        var doctorId = $('#doctorId').val();
+        fetchDoctorTimeSlots(doctorId, selectedDate);
+    });
+
+    $('#timeSlot').on('change', function () {
+        var selectedTimeSlot = $(this).val();
+        var timeSlotId = $(this).find('option:selected').data('time-slot-id');
+
+        $('#timeSlotId').val(timeSlotId);
+    });
+
+    $('#date').on('input', function () {
+        var currentDate = new Date();
+        var selectedDate = new Date($(this).val());
+
+        if (selectedDate < currentDate) {
+            alert('Please select a future or current date.');
+            $(this).val('');
+        }
+    });
 });
- 
-     function fetchDoctorTimeSlots(doctorId) {
-         fetch(`/doctors/${doctorId}/timeslots`)
-             .then(response => response.json())
-             .then(data => {
-                 const timeSlotDropdown = document.getElementById("timeSlot");
- 
-                 timeSlotDropdown.innerHTML = '<option value="">Select a Time Slot</option>';
- 
-                 data.forEach(timeSlot => {
-                     const startTime = timeSlot.start_time;
-                     const endTime = timeSlot.end_time;
-                     const timeSlotId = timeSlot.id;
-                     const option = document.createElement("option");
-                     option.value = `${startTime} - ${endTime}`;
-                     option.textContent = `${startTime} - ${endTime}`;
-                     option.setAttribute('data-time-slot-id', timeSlotId);
-                     timeSlotDropdown.appendChild(option);
-                 });
-             })
-             .catch(error => {
-                 console.error('Error fetching doctor time slots:', error);
-             });
-         }
- 
-     const doctorId = 1;
-     fetchDoctorTimeSlots(doctorId);
+
+function fetchDoctorTimeSlots(doctorId, selectedDate) {
+    var url = `/doctors/${doctorId}/timeslots?date=${selectedDate}`;
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            const timeSlotDropdown = document.getElementById("timeSlot");
+
+            timeSlotDropdown.innerHTML = '<option value="">Select a Time Slot</option>';
+
+            data.forEach(timeSlot => {
+                const startTime = timeSlot.start_time;
+                const endTime = timeSlot.end_time;
+                const timeSlotId = timeSlot.id;
+                const option = document.createElement("option");
+                option.value = `${startTime} - ${endTime}`;
+                option.textContent = `${startTime} - ${endTime}`;
+                option.setAttribute('data-time-slot-id', timeSlotId);
+                timeSlotDropdown.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching doctor time slots:', error);
+        });
+}
 </script>
  
 

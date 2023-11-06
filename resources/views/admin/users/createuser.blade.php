@@ -16,6 +16,16 @@
                         @method('PUT')
                         @endif
 
+                        @if ($errors->any())
+                        <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                        </div>
+                        @endif
+
                         <div class="form-group row">
                             <div class="col-md-6">
                                 <label for="name">Name</label>
@@ -27,7 +37,6 @@
                             <div class="col-md-6">
                                 <label for="email">Email</label>
                                 <input type="email" class="form-control" id="email" name="email" value="{{ isset($user) ? $user->email : '' }}">
-                                <!-- Error message for Email -->
                                 <div class="text-danger" id="email-error"></div>
                             </div>
                         </div>
@@ -60,20 +69,19 @@
                                 <label class="form-check-label" for="female">Female</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="gender" id="other" value="Others" {{ isset($user) && $user->gender == 'others' ? 'checked' : '' }}>
+                                <input class="form-check-input" type="radio" name="gender" id="other" value="Other" {{ isset($user) && $user->gender == 'other' ? 'checked' : '' }}>
                                 <label class="form-check-label" for="other">Other</label>
                             </div>                            
                             <!-- Error message for Gender -->
                             <div class="text-danger" id="gender-error"></div>
                         </div>
-                        
-                        
+
                         <div class="col-md-6">
                             <label for="role">Role</label>
                             <select class="form-control" id="role" name="role">
-                                <option value="Admin" {{ isset($user) && $user->role === 'Admin' ? 'selected' : '' }}>Admin</option>
-                                <option value="Doctor" {{ isset($user) && $user->role === 'Doctor' ? 'selected' : '' }}>Doctor</option>
-                                {{-- <option value="Patient" {{ isset($user) && $user->role === 'Patient' ? 'selected' : '' }}>Patient</option> --}}
+                                <option value="Select" {{ $userRole === 'Select' ? 'selected' : '' }}>Select</option>
+                                <option value="Doctor" {{ $userRole === 'Doctor' ? 'selected' : '' }}>Doctor</option>
+                                <option value="Patient" {{ $userRole === 'Patient' ? 'selected' : '' }}>Patient</option>
                             </select>
                             <!-- Error message for Role -->
                             <div class="text-danger" id="role-error"></div>
@@ -93,42 +101,35 @@
                             </div>
                         </div>
 
-
                         <div class="form-group row">
                             <div class="col-md-6">
                                 <label for="specialist">Specialist</label>
                                 <select class="form-control" id="specialist" name="specialist">
                                     <option value="Select">Select</option>
-                                    @php
-                                    $specialists = ['Cardiologist', 'Pediatrician', 'Ophthalmologist', 'Neurologist', 'Psychiatrist', 'Dermatologist'];
-                                    $selected = isset($user) && $user->userDetails ? $user->userDetails[0]->specialist : null;
-                                    @endphp
-                                    @foreach ($specialists as $specialist)
-                                        <option value="{{ $specialist }}" {{ $selected === $specialist ? 'selected' : '' }}>{{ $specialist }}</option>
+                                    @foreach($specialists as $specialist)
+                                        <option value="{{ $specialist->id }}" {{ isset($userDetails) && $userDetails->specialist == $specialist->id ? 'selected' : '' }}>
+                                            {{ $specialist->specialist }}
+                                        </option>
                                     @endforeach
                                 </select>
+                                <!-- Error message for Specialist -->
                                 <div class="text-danger" id="specialist-error"></div>
                             </div>
-                        
-                            <div class="col-md-6">
-                                <label for="experience">Experience</label>
-                                <select class="form-control" id="experience" name="experience">
-                                    @for ($i = 0; $i <= 50; $i++)
-                                        @php
-                                            $isSelected = false;
-                                            if (isset($user) && $userDetails) {
-                                                if ($userDetails->experience == $i) {
-                                                    $isSelected = true;
-                                                }
-                                            }
-                                        @endphp
-                                        <option value="{{ $i }}" {{ $isSelected ? 'selected' : '' }}>{{ $i }} years</option>
-                                    @endfor
-                                </select>
-                                <div class="text-danger" id="experience-error"></div>
-                            </div>
-                        </div>
 
+                        <div class="col-md-6">
+                            <label for="experience">Experience</label>
+                            <select class="form-control" id="experience" name="experience">
+                                <option value="Select">Select</option>
+                                @foreach($experiences as $experience)
+                                    <option value="{{ $experience }}" {{ isset($userDetails) && $userDetails->experience == $experience ? 'selected' : '' }}>
+                                        {{ $experience }} years
+                                    </option>
+                                @endforeach
+                            </select>
+                            <!-- Error message for Experience -->
+                            <div class="text-danger" id="experience-error"></div>
+                          </div>
+                        </div>
 
                         <div class="form-group row">
                             <div class="col-md-6">
@@ -144,8 +145,6 @@
                             </div>
                         </div>
                         
-                        
-
                         <div class="d-flex justify-content-between align-items-center">
                             <button type="submit" class="btn btn-primary">
                                 {{ isset($user) ? 'Update' : 'Submit' }}

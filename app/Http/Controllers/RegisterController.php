@@ -7,7 +7,7 @@ use App\Models\Userdetails;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
-class registerController extends Controller
+class RegisterController extends Controller
 {
     public function create()
     {

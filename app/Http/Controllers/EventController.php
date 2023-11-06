@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AppointmentBooking;
 use Illuminate\Http\Request;
 
-class eventController extends Controller
+class EventController extends Controller
 {
 
         public function getEvent(Request $request)
